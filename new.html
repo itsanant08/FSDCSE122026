@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+
+    <style>
+        table {
+            border: 2px solid red;
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 2px solid green;
+            text-align: center;
+            padding: 8px;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+        }
+
+        button {
+            padding: 8px;
+            background: green;
+            color: white;
+            border: 0;
+            cursor: pointer;
+        }
+
+        #address, #payment {
+            display: none;
+            width: 300px;
+            margin: 30px auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2 align="center">List of Products</h2>
+
+<table>
+    <tr>
+        <th>Sr. No.</th>
+        <th>Title</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Rating</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Cart</th>
+    </tr>
+
+    <tbody id="data"></tbody>
+</table>
+
+<div align="center">
+    <br>
+    <button onclick="placeOrder()">Place Order</button>
+</div>
+
+
+<!-- Address Window -->
+
+<div id="address">
+
+    <h2>Enter Address</h2>
+
+    <input type="text" placeholder="Name" required>
+    <input type="text" placeholder="Phone" required>
+    <input type="text" placeholder="Address" required>
+    <input type="text" placeholder="City" required>
+    <input type="text" placeholder="PIN Code" required>
+
+    <button onclick="goToPayment()">Continue to Payment</button>
+
+</div>
+
+
+<!-- Payment Window -->
+
+<div id="payment">
+
+    <h2>Payment</h2>
+
+    <p>Select Payment Method:</p>
+
+    <input type="radio" name="payment"> UPI<br>
+    <input type="radio" name="payment"> Card<br>
+    <input type="radio" name="payment"> Cash on Delivery<br><br>
+
+    <button onclick="pay()">Pay Now</button>
+
+</div>
+
+
+<script>
+
+const productURL = "https://dummyjson.com/products?limit=100";
+
+async function loadProducts() {
+
+    try {
+
+        const response = await fetch(productURL);
+        const data = await response.json();
+
+        let rows = "";
+
+        data.products.forEach((p, i) => {
+
+            rows += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${p.title}</td>
+                    <td><img src="${p.images[0]}"></td>
+                    <td>${p.category}</td>
+                    <td>${p.rating}</td>
+                    <td>₹${(p.price * 88).toFixed(2)}</td>
+                    <td>${p.stock}</td>
+                    <td>
+                        <button onclick="addToCart(${p.id})">
+                            Add to Cart
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+        });
+
+        document.getElementById("data").innerHTML = rows;
+
+    } catch (error) {
+
+        document.getElementById("data").innerHTML =
+            "<tr><td colspan='8'>Failed to load products</td></tr>";
+
+    }
+}
+
+
+function addToCart(id) {
+    alert("Product " + id + " added to cart!");
+}
+
+
+function placeOrder() {
+
+    document.querySelector("table").style.display = "none";
+    document.querySelector("h2").style.display = "none";
+
+    document.getElementById("address").style.display = "block";
+
+}
+
+
+function goToPayment() {
+
+    document.getElementById("address").style.display = "none";
+    document.getElementById("payment").style.display = "block";
+
+}
+
+
+function pay() {
+
+    alert("Payment Successful!");
+
+}
+
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
