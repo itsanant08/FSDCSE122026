@@ -110,6 +110,7 @@ const productURL = "https://dummyjson.com/products?limit=100";
 async function loadProducts() {
 
     try {
+        
 
         const response = await fetch(productURL);
         const data = await response.json();
